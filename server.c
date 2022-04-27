@@ -108,7 +108,7 @@ int main(){
             perror("Error while read()");
             return EXIT_FAILURE;
         }
-        // Zurückschicken der Daten, solange der Client welche schickt (und kein Fehler passiert)
+        // Sending back data as long the client keeps sending some
         while (read_bytes > 0) {
             printf("sending back the %d bytes I received...\n", read_bytes);
 

@@ -9,7 +9,7 @@
 #define LOOP 1
 #define BUFSIZE 1024 // Größe vom buffer
 //Port zum verbinden mit Docker Container über Telnet mit telnet 127.0.0.1 5688 (oder welcher Port hier definiert wird)
-#define PORT_NUMBER 5688
+#define PORT_NUMBER 5691
 
 int main() {
 

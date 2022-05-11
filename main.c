@@ -10,13 +10,15 @@
 #include <stdlib.h>
 #include <strings.h>
 #include <unistd.h>
+#include "main.h"
+#include "keyValStore.h"
 
 #define LOOP 1
 #define BUFSIZE 1024 // Size of the buffer
 //  Opened Ports in the Docker Container, or whatelse is used for the host-system
-//#define PORT_NUMBER 5678
+#define PORT_NUMBER 5678
 // Port for running on mac itself
-#define PORT_NUMBER 4711
+//#define PORT_NUMBER 4711
 
 int main(){
 

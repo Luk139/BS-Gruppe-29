@@ -10,8 +10,9 @@
 #include <stdlib.h>
 #include <strings.h>
 #include <unistd.h>
-#include "main.h"
-#include "keyValStore.h"
+#include <string.h>
+//#include "main.h"
+//#include "keyValStore.h"
 
 #define LOOP 1
 #define BUFSIZE 1024 // Size of the buffer
@@ -19,6 +20,9 @@
 #define PORT_NUMBER 5678
 // Port for running on mac itself
 //#define PORT_NUMBER 4711
+
+
+
 
 int main(){
 
@@ -111,15 +115,26 @@ int main(){
             perror("Error while read()");
             return EXIT_FAILURE;
         }
+
         // Sending back data as long the client keeps sending some
         while (read_bytes > 0) {
+            //Quit
+            if (strncmp("QUIT", in,4) == 0) {
+                printf("Server Exit...\n");
+                break;
+            }
+
+
             printf("sending back the %d bytes I received...\n", read_bytes);
 
             write(cnnct_fd, in, read_bytes);
             read_bytes = read(cnnct_fd, in, BUFSIZE);
 
         }
+
+
         close(cnnct_fd);
+
     }
 
     close(read_bytes);

@@ -12,8 +12,9 @@
 #include <strings.h>
 #include <unistd.h>
 #include <string.h>
-//#include "main.h"
-//#include "keyValStore.h"
+#include "main.h"
+#include "keyValStore.h"
+#include "sub.h"
 
 #define LOOP 1
 #define BUFSIZE 1024 // Size of the buffer
@@ -21,6 +22,7 @@
 #define PORT_NUMBER 5678
 // Port for running on mac itself
 //#define PORT_NUMBER 4711
+#define LENGTH 100
 
 
 
@@ -28,6 +30,49 @@
 int main(){
 
 
+    char keyName1[LENGTH] = {"ABC1"};
+    char keyValue1[LENGTH] = {" O123Z"};
+
+    char keyName2[LENGTH] = {"DEF2"};
+    char keyValue2[LENGTH] = {" 4567Y"};
+
+    put(keyName1, keyValue1);
+    put(keyName2, keyValue2);
+
+    /*printf("\n%s", keyValueStore[0].keyName);
+    printf("%s", keyValueStore[0].keyValue);
+    printf("\n%s", keyValueStore[1].keyName);
+    printf("%s", keyValueStore[1].keyValue);
+    printf("\n%s", keyValueStore[2].keyName);
+    printf("%s", keyValueStore[2].keyValue);*/
+
+    char keyName3[LENGTH] = {"ABC1"};
+    char keyValue3[LENGTH] = {" 78910X"};
+
+    put(keyName3, keyValue3);
+
+    /*printf("\n%s", keyValueStore[0].keyName);
+    printf("%s", keyValueStore[0].keyValue);
+    printf("\n%s", keyValueStore[1].keyName);
+    printf("%s", keyValueStore[1].keyValue);
+    printf("\n%s", keyValueStore[2].keyName);
+    printf("%s", keyValueStore[2].keyValue);*/
+
+    //printf("\n %s", get("CDF"));
+
+    printf("\n %s", get("DEF2"));
+    del("DEF2");
+    printf("\n %s", get("DEF2"));
+    del("ASDIH");
+
+
+    
+    
+    
+    
+    
+    
+    
     //File-Descriptor Rendezvous und Connect
     int rndvz_fd;
     int cnnct_fd;

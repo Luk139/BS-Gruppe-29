@@ -10,8 +10,8 @@
 #include <stdlib.h>
 #include <strings.h>
 #include <unistd.h>
-#include "main.h"
-#include "keyValStore.h"
+//#include "main.h"
+//#include "keyValStore.h"
 
 #define LOOP 1
 #define BUFSIZE 1024 // Size of the buffer

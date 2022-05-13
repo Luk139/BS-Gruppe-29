@@ -4,43 +4,76 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <string.h>
-#include "main.h"
-#include "keyValStore.h"
+
 
 #define LENGTH 100
 #define SIZE 50
 
-typedef struct key_{
-
-    char keyName [LENGTH];
-    char keyVal [LENGTH];
-
-}key;
-
-key* keyValueStore[SIZE];
-
-for(int i = 0; i < SIZE; i++){
-
-}
+int counter = 0;
 
 
 
-int put(char * key, char* value){
-    int index ;
+typedef struct Key_{
+
+    char * keyName;
+    char * keyVal;
+
+}Key;
+
+Key* keyValueStore[SIZE];
+
+
+
+
+int put(char * key, char * value){
+
+        Key handover;
+        handover.keyName = key;
+        handover.keyVal = value;
+        keyValueStore[counter] = &handover;
+        /*
+        keyValueStore[counter]->keyName = key;
+        keyValueStore[counter]->keyVal = value;
+        */
+        counter++;
+
+
+
 
     return -1;
 }
 
 
-int get(char* key, char* res){
+/*
+int get(char * key[], char * res[]){
 
+    printf("%s", keyValueStore[0]->keyName );
+    printf("%s", keyValueStore[0]->keyVal );
+
+    return -1;
+};
+*/
+
+
+int del(char * key[]){
 
     return -1;
 };
 
+int main(){
+
+    char string1[LENGTH][LENGTH] = {"name1", "name2", "name3"};
+    char string2[LENGTH][LENGTH] = {"wert1", "wert2", "wert3"};
 
 
-int del(char* key){
-
-    return -1;
-};
+    put(string1[counter],string2[counter]);
+    printf("%s", keyValueStore[counter - 1]->keyName );
+    printf("%s", keyValueStore[counter - 1]->keyVal );
+    put(string1[counter],string2[counter]);
+    printf("%s", keyValueStore[counter - 1]->keyName );
+    printf("%s", keyValueStore[counter - 1]->keyVal );
+    put(string1[counter],string2[counter]);
+    printf("%s", keyValueStore[counter - 1]->keyName );
+    printf("%s", keyValueStore[counter - 1]->keyVal );
+    return 0;
+}

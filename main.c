@@ -2,7 +2,6 @@
 
   Ein TCP-Echo-Server als iterativer Server: Der Server schickt einfach die
   Daten, die der Client schickt, an den Client zurück.
-  asadasd
 
 *******************************************************************************/
 

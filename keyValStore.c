@@ -32,8 +32,6 @@ int put(char* key, char* value, int pos){
     tempKey.keyValue = value;
 
 
-
-
     int i = search(key);
     if( i >= 0){
         keyValueStore[i] = tempKey;

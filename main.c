@@ -19,7 +19,7 @@
 #define LOOP 1
 #define BUFSIZE 1024 // Size of the buffer
 //  Opened Ports in the Docker Container, or whatelse is used for the host-system
-#define PORT_NUMBER 5678
+#define PORT_NUMBER 5889
 // Port for running on mac itself
 //#define PORT_NUMBER 4711
 #define LENGTH 100

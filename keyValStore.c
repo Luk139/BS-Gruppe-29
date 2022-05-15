@@ -1,10 +1,9 @@
 #include <stdio.h>
 #include <string.h>
 #include "keyValStore.h"
-
-#define LENGHT 100
-#define SIZE 5
-
+#include "main.h"
+#define LENGTH 100
+#define SIZE 25
 
 typedef struct key_ {
     char* keyName;
@@ -13,7 +12,6 @@ typedef struct key_ {
 
 
 Key keyValueStore[SIZE];
-int pos = 0;
 
 
 int search(char* key){
@@ -28,29 +26,32 @@ int search(char* key){
 }
 
 
-int put(char* key, char* value){
+int put(char* key, char* value, int pos){
     Key tempKey;
     tempKey.keyName = key;
     tempKey.keyValue = value;
+
 
     int i = search(key);
     if( i >= 0){
         keyValueStore[i] = tempKey;
         return 1;
-    }else{
+    }
+    else{
         keyValueStore[pos] = tempKey;
-        pos++;
         return 0;
     }
 }
 
 char* get(char* key){
-    int i = search(key);
-    if(i >= 0){
-        return keyValueStore[i].keyValue;
+    if(search(key) >= 0){
+        int i = search(key);
+        char stringReturn[LENGTH];
+        strcpy(stringReturn, keyValueStore[i].keyValue);
+        return   stringReturn;
     }
 
-    return "key non existent";
+    return "key non existent\n";
 }
 
 //TODO: Key nachrücken
@@ -63,4 +64,18 @@ int del(char* key){
     }
 
     return -1;
+}
+
+//Hilfsfunktion Ausgabe keyValueStore
+void ausgabeKeyValStore(){
+    int j = 0;
+    //keyValueStore[i].keyValue != NULL
+    while(j <= 2){
+        printf("%s\n", keyValueStore[j].keyName);
+        printf("%s\t", keyValueStore[j].keyValue);
+
+        j++;
+    }
+
+
 }

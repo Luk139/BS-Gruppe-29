@@ -30,6 +30,7 @@
 //#define PORT_NUMBER 5678
 // Port for running on mac itself
 #define PORT_NUMBER 4711
+
 #define LENGTH 100
 #define SIZE 25
 
@@ -73,6 +74,7 @@ int main(){
 
     printf("%s", sharMem[0].keyName);
     printf("%s", sharMem[0].keyValue);
+
 
 
 
@@ -232,16 +234,22 @@ int main(){
                 put(arr[1], arr[2], pos);
                 pos += 1;
                 write(cnnct_fd, "\n", 2);
-                printf("%d\n", pos);
+
+                printf("positions counter: %d\n", pos);
             }
             else if (strcmp(arr[0], "DEL") == 0)
             {
-                del(arr[2]);
-                write(cnnct_fd, "\n", 2);
+                int i = del(arr[1]);
+                if (i >= 0) {
+                    write(cnnct_fd, "key_deleted \n", 11);
+                }
+                else {
+                    write(cnnct_fd, "key_nonexistent \n", 11);
+                }
             }
             else if (strcmp(arr[0], "ALL") == 0)
             {
-                ausgabeKeyValStore();
+                //ausgabeKeyValStore();
             }
             else
             {
@@ -266,6 +274,9 @@ int main(){
 
         close(cnnct_fd);
 
+        //shared memory delet
+        //shmdt(sharMem);
+        //shmctl(id, IPC_RMID, 0);
     }
 
     close(read_bytes);

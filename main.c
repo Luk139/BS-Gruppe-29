@@ -27,9 +27,10 @@
 #define LOOP 1
 #define BUFSIZE 1024 // Size of the buffer
 //  Opened Ports in the Docker Container, or whatelse is used for the host-system
-#define PORT_NUMBER 5678
+//#define PORT_NUMBER 5678
 // Port for running on mac itself
-//#define PORT_NUMBER 4711
+#define PORT_NUMBER 4711
+
 #define LENGTH 100
 #define SIZE 25
 
@@ -56,14 +57,31 @@ int main(){
     // id für shared Memory Segment
     //*sharMem zum verändern von Werten im Shared Memory
     int id;
-    Key* sharMem = NULL;
+    Key *sharMem = NULL;
     if((id = shmget(IPC_PRIVATE, SEGSIZE, IPC_CREAT|0600)) < 0){
         perror("Error while shmget()");
     }
 
-    if ((sharMem = (Key*) shmat(id, 0, 0)) < 0){
+    // Anhängen des Shared Memorys
+    if((sharMem = (Key *)shmat(id, 0, 0)) < 0){
         perror("Error while shmat()");
     }
+
+    Key testkey;
+    testkey.keyValue = "name1";
+    testkey.keyName = "value1";
+    sharMem[0] = testkey;
+
+    printf("%s", sharMem[0].keyName);
+    printf("%s", sharMem[0].keyValue);
+
+
+
+
+
+
+
+
 
     //File-Descriptor Rendezvous und Connect
     int rndvz_fd;
@@ -216,6 +234,7 @@ int main(){
                 put(arr[1], arr[2], pos);
                 pos += 1;
                 write(cnnct_fd, "\n", 2);
+
                 printf("positions counter: %d\n", pos);
             }
             else if (strcmp(arr[0], "DEL") == 0)

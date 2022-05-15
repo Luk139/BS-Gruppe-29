@@ -1,6 +1,7 @@
+#define LENGTH 100
 typedef struct key_ {
-    char* keyName;
-    char* keyValue;
+    char keyName[LENGTH];
+    char keyValue[LENGTH];
 }Key;
 
 extern Key *sharMem;

@@ -1,79 +1,86 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include <stdint.h>
-#include <stdbool.h>
-#include <stdint.h>
 #include <string.h>
-
+#include "keyValStore.h"
+#include "main.h"
 
 #define LENGTH 100
-#define SIZE 50
+#define SIZE 25
 
-int counter = 0;
-
-
-
-typedef struct Key_{
-
-    char * keyName;
-    char * keyVal;
-
+typedef struct key_ {
+    char* keyName;
+    char* keyValue;
 }Key;
 
-Key* keyValueStore[SIZE];
+//Key* keyValueStore[SIZE];
+
+/* //Hilfsfunktion Ausgabe keyValueStore
+void ausgabeKeyValStore(){
+    int j = 0;
+    while(j <= 2){
+        if((keyValueStore[j]->keyName != NULL)) {
+            printf("%s\n", keyValueStore[j]->keyName);
+            printf("%s\t", keyValueStore[j]->keyValue);
+        }
+        j++;
+    }
+} */
+
+int search(char* key){
+    // TODO probable error i seems to be responsible for key to get overwritten
+    for(int i=0; i < SIZE; i++){
+        if((keyValueStore[i]->keyName != NULL) && (keyValueStore[i]->keyName[0] != '\0')){
+            if(strcmp (&key, &keyValueStore[i]->keyName) == 0){
+                return i;
+            }
+        }
+    }
+    return -1;
+}
 
 
+int put(char* key, char* value, int pos){
+    Key tempKey1 = {key, value}, *tempKey2 = &tempKey1;
+
+    /*int i = search(key);
+    if( i >= 0){
+        keyValueStore[i] = &tempKey;
+        return 1;
+    }*/
+    //else{
+        keyValueStore[pos] = tempKey2;
+        printf("keyvalue nach dem put: %s \n", keyValueStore[0]->keyValue);
+
+        return 0;
+    //}
+}
+
+char* get(char* key){
+    printf("keyvalue vor dem search in get: %s \n", keyValueStore[0]->keyValue);
+
+    int i = search(key);
+    printf("keyvalue nach dem search in get: %s \n", keyValueStore[0]->keyValue);
 
 
-int put(char * key, char * value){
+    if(i >= 0){
+        //char stringReturn[LENGTH];
+        //strcpy(stringReturn, keyValueStore[i]->keyValue);
+        return   keyValueStore[i]->keyValue;
+    }
 
-        Key handover;
-        handover.keyName = key;
-        handover.keyVal = value;
-        keyValueStore[counter] = &handover;
-        /*
-        keyValueStore[counter]->keyName = key;
-        keyValueStore[counter]->keyVal = value;
-        */
-        counter++;
+    return "key non existent\n";
+}
 
-
-
+//TODO: Key nachrücken
+int del(char* key){
+    int i = search(key);
+    if(i >= 0){
+        keyValueStore[i]->keyName[0] = '\0';
+        keyValueStore[i]->keyValue[0] = '\0';
+        return 0;
+    }
 
     return -1;
 }
 
 
-/*
-int get(char * key[], char * res[]){
 
-    printf("%s", keyValueStore[0]->keyName );
-    printf("%s", keyValueStore[0]->keyVal );
-
-    return -1;
-};
-*/
-
-
-int del(char * key[]){
-
-    return -1;
-};
-
-int main(){
-
-    char string1[LENGTH][LENGTH] = {"name1", "name2", "name3"};
-    char string2[LENGTH][LENGTH] = {"wert1", "wert2", "wert3"};
-
-
-    put(string1[counter],string2[counter]);
-    printf("%s", keyValueStore[counter - 1]->keyName );
-    printf("%s", keyValueStore[counter - 1]->keyVal );
-    put(string1[counter],string2[counter]);
-    printf("%s", keyValueStore[counter - 1]->keyName );
-    printf("%s", keyValueStore[counter - 1]->keyVal );
-    put(string1[counter],string2[counter]);
-    printf("%s", keyValueStore[counter - 1]->keyName );
-    printf("%s", keyValueStore[counter - 1]->keyVal );
-    return 0;
-}

@@ -55,14 +55,24 @@ int main(){
 
     // id für shared Memory Segment
     //*sharMem zum verändern von Werten im Shared Memory
-    int id, *sharMem;
-    id = shmget(IPC_PRIVATE, SEGSIZE, IPC_CREAT|0600);
+    int id;
+    Key *sharMem = NULL;
+    if((id = shmget(IPC_PRIVATE, SEGSIZE, IPC_CREAT|0600)) < 0){
+        perror("Error while shmget()");
+    }
 
-    sharMem = (int *)shmat(id, 0, 0);
-    *sharMem = 0;
+    // Anhängen des Shared Memorys
+    if((sharMem = (Key *)shmat(id, 0, 0)) < 0){
+        perror("Error while shmat()");
+    }
 
+    Key testkey;
+    testkey.keyValue = "name1";
+    testkey.keyName = "value1";
+    sharMem[0] = testkey;
 
-
+    printf("%s", sharMem[0].keyName);
+    printf("%s", sharMem[0].keyValue);
 
 
 

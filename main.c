@@ -12,10 +12,18 @@
 #include <strings.h>
 #include <unistd.h>
 #include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/ipc.h>
+#include <sys/shm.h>
+#include <sys/wait.h>
 #include "main.h"
 #include "keyValStore.h"
 #include "sub.h"
 
+#define SEGSIZE sizeof(keyValueStore[SIZE])
 #define LOOP 1
 #define BUFSIZE 1024 // Size of the buffer
 //  Opened Ports in the Docker Container, or whatelse is used for the host-system
@@ -23,7 +31,7 @@
 // Port for running on mac itself
 #define PORT_NUMBER 4711
 #define LENGTH 100
-#define SIZE 3
+#define SIZE 25
 
 
 
@@ -36,33 +44,25 @@ int pos = 0;
 int main(){
 
 
-    /*char keyName1[LENGTH] = {"ABC1"};
-    char keyValue1[LENGTH] = {" O123Z"};
-    char keyName2[LENGTH] = {"DEF2"};
-    char keyValue2[LENGTH] = {" 4567Y"};
-    put(keyName1, keyValue1);
-    put(keyName2, keyValue2);
-    printf("\n%s", keyValueStore[0].keyName);
-    printf("%s", keyValueStore[0].keyValue);
-    printf("\n%s", keyValueStore[1].keyName);
-    printf("%s", keyValueStore[1].keyValue);
-    printf("\n%s", keyValueStore[2].keyName);
-    printf("%s", keyValueStore[2].keyValue);
-    char keyName3[LENGTH] = {"ABC1"};
-    char keyValue3[LENGTH] = {" 78910X"};
-    put(keyName3, keyValue3);
-    printf("\n%s", keyValueStore[0].keyName);
-    printf("%s", keyValueStore[0].keyValue);
-    printf("\n%s", keyValueStore[1].keyName);
-    printf("%s", keyValueStore[1].keyValue);
-    printf("\n%s", keyValueStore[2].keyName);
-    printf("%s", keyValueStore[2].keyValue);
-    //printf("\n %s", get("CDF"));
-    printf("\n %s", get("DEF2"));
-    del("DEF2");
-    printf("\n %s", get("DEF2"));
-    del("ASDIH");
-    */
+    typedef struct key_ {
+        char* keyName;
+        char* keyValue;
+    }Key;
+
+
+    Key keyValueStore[SIZE];
+
+
+    // id für shared Memory Segment
+    //*sharMem zum verändern von Werten im Shared Memory
+    int id, *sharMem;
+    id = shmget(IPC_PRIVATE, SEGSIZE, IPC_CREAT|0600);
+
+    sharMem = (int *)shmat(id, 0, 0);
+    *sharMem = 0;
+
+
+
 
 
 
@@ -192,6 +192,7 @@ int main(){
                 strcpy(arr[i], ptr);
                 write(cnnct_fd, ptr, sendBytes);
                 //add :
+                // if put skip last :
                 if(i <= 1){
                     write(cnnct_fd, ":", 1);
                 }

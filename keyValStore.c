@@ -2,19 +2,21 @@
 #include <string.h>
 #include "keyValStore.h"
 #include "main.h"
+
 #define LENGTH 100
 #define SIZE 25
 
-typedef struct key_ {
-    char* keyName;
-    char* keyValue;
-}Key;
 
 
-Key keyValueStore[SIZE];
+
+
+
+
+
 
 
 int search(char* key){
+    // TODO probable error i seems to be responsible for key to get overwritten
     for(int i=0; i < SIZE; i++){
         if(keyValueStore[i].keyName != NULL){
             if(strcmp (key, keyValueStore[i].keyName) == 0){

@@ -1,31 +1,11 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include <stdint.h>
-#include <stdbool.h>
-#include <stdint.h>
 #include <string.h>
-
+#include "keyValStore.h"
+#include "main.h"
 
 #define LENGTH 100
-#define SIZE 50
+#define SIZE 25
 
-<<<<<<< Updated upstream
-int counter = 0;
-
-
-
-typedef struct Key_{
-
-    char * keyName;
-    char * keyVal;
-
-}Key;
-
-Key* keyValueStore[SIZE];
-
-
-
-=======
 typedef struct key_ {
     char* keyName;
     char* keyValue;
@@ -44,24 +24,8 @@ int search(char* key){
     }
     return -1;
 }
->>>>>>> Stashed changes
-
-int put(char * key, char * value){
-
-<<<<<<< Updated upstream
-        Key handover;
-        handover.keyName = key;
-        handover.keyVal = value;
-        keyValueStore[counter] = &handover;
-        /*
-        keyValueStore[counter]->keyName = key;
-        keyValueStore[counter]->keyVal = value;
-        */
-        counter++;
 
 
-
-=======
 int put(char* key, char* value, int pos){
     Key tempKey1 = {key, value}, *tempKey2 = &tempKey1;
 
@@ -87,19 +51,10 @@ char* get(char* key){
         //strcpy(stringReturn, keyValueStore[i]->keyValue);
         return   keyValueStore[i]->keyValue;
     }
->>>>>>> Stashed changes
 
-    return -1;
+    return "key non existent\n";
 }
 
-<<<<<<< Updated upstream
-
-/*
-int get(char * key[], char * res[]){
-
-    printf("%s", keyValueStore[0]->keyName );
-    printf("%s", keyValueStore[0]->keyVal );
-=======
 //TODO: Key nachrücken
 int del(char* key){
     int i = search(key);
@@ -108,37 +63,10 @@ int del(char* key){
         keyValueStore[i]->keyValue = NULL;
         return 0;
     }
->>>>>>> Stashed changes
 
     return -1;
-};
-*/
-
-
-int del(char * key[]){
-
-    return -1;
-};
-
-<<<<<<< Updated upstream
-int main(){
-
-    char string1[LENGTH][LENGTH] = {"name1", "name2", "name3"};
-    char string2[LENGTH][LENGTH] = {"wert1", "wert2", "wert3"};
-
-
-    put(string1[counter],string2[counter]);
-    printf("%s", keyValueStore[counter - 1]->keyName );
-    printf("%s", keyValueStore[counter - 1]->keyVal );
-    put(string1[counter],string2[counter]);
-    printf("%s", keyValueStore[counter - 1]->keyName );
-    printf("%s", keyValueStore[counter - 1]->keyVal );
-    put(string1[counter],string2[counter]);
-    printf("%s", keyValueStore[counter - 1]->keyName );
-    printf("%s", keyValueStore[counter - 1]->keyVal );
-    return 0;
 }
-=======
+
 //Hilfsfunktion Ausgabe keyValueStore
 void ausgabeKeyValStore(){
     int j = 0;
@@ -151,4 +79,3 @@ void ausgabeKeyValStore(){
     }
 }
 
->>>>>>> Stashed changes

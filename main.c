@@ -2,6 +2,7 @@
  *  Echo-Server
  *
  *
+ *
  */
 
 #include <sys/socket.h>
@@ -10,17 +11,25 @@
 #include <stdlib.h>
 #include <strings.h>
 #include <unistd.h>
+#include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/ipc.h>
+#include <sys/shm.h>
+#include <sys/wait.h>
 #include "main.h"
 #include "keyValStore.h"
+#include "sub.h"
 
+#define SEGSIZE sizeof(keyValueStore[SIZE])
 #define LOOP 1
 #define BUFSIZE 1024 // Size of the buffer
 //  Opened Ports in the Docker Container, or whatelse is used for the host-system
 #define PORT_NUMBER 5678
 // Port for running on mac itself
 //#define PORT_NUMBER 4711
-//<<<<<<< Updated upstream
-//=======
 #define LENGTH 100
 #define SIZE 25
 
@@ -31,13 +40,10 @@
 int pos = 0;
 
 
-//>>>>>>> Stashed changes
 
 int main(){
 
 
-//<<<<<<< Updated upstream
-//=======
     typedef struct key_ {
         char* keyName;
         char* keyValue;
@@ -62,7 +68,6 @@ int main(){
 
 
 
-//>>>>>>> Stashed changes
     //File-Descriptor Rendezvous und Connect
     int rndvz_fd;
     int cnnct_fd;
@@ -74,7 +79,7 @@ int main(){
     // Counter for send Bytes from the Client
     int read_bytes;
     // Char-Array for Messages from the Client to the Server
-    char in[BUFSIZE];
+    char userInput[BUFSIZE];
 
     /*  Creating the socket with ipv4 and tcp no further description for protocol needed so 0 is enough -> SOCK_STREAM uses tcp by default.
 *   AF_INET = ipv4
@@ -146,27 +151,111 @@ int main(){
 
 
         // read the bytes from the client
-        read_bytes = read(cnnct_fd, in, BUFSIZE);
+        read_bytes = read(cnnct_fd, userInput, BUFSIZE);
         if(read_bytes < 0){
             perror("Error while read()");
             return EXIT_FAILURE;
         }
+
         // Sending back data as long the client keeps sending some
         while (read_bytes > 0) {
-            printf("sending back the %d bytes I received...\n", read_bytes);
 
-            write(cnnct_fd, in, read_bytes);
-            read_bytes = read(cnnct_fd, in, BUFSIZE);
+            //Quit
+            if (strncmp("QUIT", userInput, 4) == 0) {
+                printf("Server Exit...\n");
+                break;
+            }
+
+            // Get rid of the trash at the end of the telnet message
+            char delimiter1[] = "\r";
+            char *ptr;
+            ptr = strtok(userInput, delimiter1);
+
+            // /x20
+            char delimiter[] = "\x20";
+            //char *ptr;
+
+            //Array for storing the prts of the string [0] will store the command, [1] for the key and [2] for the value
+            char arr[SIZE][LENGTH];
+            int i = 0;
+            int sendBytes = 0;
+
+            //First Part, should be the commands GET, PUT, DEL
+            ptr = strtok(ptr, delimiter);
+            sendBytes = strlen(ptr);
+
+
+            while(ptr != NULL) {
+                strcpy(arr[i], ptr);
+                write(cnnct_fd, ptr, sendBytes);
+                //add :
+                // if put skip last :
+                if(i <= 1){
+                    write(cnnct_fd, ":", 1);
+                }
+                // naechsten Abschnitt erstellen
+                ptr = strtok(NULL, delimiter);
+                //Dont set the integer to NULL
+                if(ptr != NULL) {
+                    sendBytes = strlen(ptr);
+                }
+                i++;
+            }
+
+            char * wrongInput = "Please use a proper command.\n";
+            int wrngInptLength = strlen(wrongInput);
+
+            //Check the Input for a Command GET, PUT, DEL
+            if (strcmp(arr[0], "GET") == 0)
+            {
+                ptr = get(arr[1]);
+                sendBytes = strlen(ptr);
+                write(cnnct_fd, ptr, sendBytes);
+                write(cnnct_fd, "\n", 2);
+
+            }
+            else if (strcmp(arr[0], "PUT") == 0)
+            {
+                put(arr[1], arr[2], pos);
+                pos += 1;
+                write(cnnct_fd, "\n", 2);
+                printf("%d\n", pos);
+            }
+            else if (strcmp(arr[0], "DEL") == 0)
+            {
+                del(arr[2]);
+                write(cnnct_fd, "\n", 2);
+            }
+            else if (strcmp(arr[0], "ALL") == 0)
+            {
+                //ausgabeKeyValStore();
+            }
+            else
+            {
+                write(cnnct_fd, wrongInput, wrngInptLength);
+
+            }
+
+           printf("sending back the %d bytes I received...\n", read_bytes);
+
+
+
+
+
+
+
+
+            //write(cnnct_fd, userInput, read_bytes);
+            read_bytes = read(cnnct_fd, userInput, BUFSIZE);
 
         }
+
+
         close(cnnct_fd);
-//<<<<<<< Updated upstream
-//=======
 
         //shared memory delet
         //shmdt(sharMem);
         //shmctl(id, IPC_RMID, 0);
-//>>>>>>> Stashed changes
     }
 
     close(read_bytes);

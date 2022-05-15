@@ -19,7 +19,7 @@
 #include <sys/ipc.h>
 #include <sys/shm.h>
 #include <sys/wait.h>
-#include "main.h"
+
 #include "keyValStore.h"
 #include "sub.h"
 
@@ -27,9 +27,9 @@
 #define LOOP 1
 #define BUFSIZE 1024 // Size of the buffer
 //  Opened Ports in the Docker Container, or whatelse is used for the host-system
-//#define PORT_NUMBER 5678
+#define PORT_NUMBER 5678 //4711 für Mac
 // Port for running on mac itself
-#define PORT_NUMBER 4711
+//#define PORT_NUMBER
 
 #define LENGTH 100
 #define SIZE 25
@@ -45,12 +45,6 @@ int pos = 0;
 int main(){
 
 
-    typedef struct key_ {
-        char* keyName;
-        char* keyValue;
-    }Key;
-
-
     Key keyValueStore[SIZE];
 
 
@@ -60,21 +54,28 @@ int main(){
     Key *sharMem = NULL;
     if((id = shmget(IPC_PRIVATE, SEGSIZE, IPC_CREAT|0600)) < 0){
         perror("Error while shmget()");
+        return EXIT_FAILURE;
     }
 
     // Anhängen des Shared Memorys
     if((sharMem = (Key *)shmat(id, 0, 0)) < 0){
         perror("Error while shmat()");
+        return EXIT_FAILURE;
     }
 
-    Key testkey;
+   /* Key testkey;
     testkey.keyValue = "name1";
     testkey.keyName = "value1";
     sharMem[0] = testkey;
 
-    printf("%s", sharMem[0].keyName);
-    printf("%s", sharMem[0].keyValue);
+    testkey.keyValue = "name2";
+    testkey.keyName = "value2";
+    sharMem[1] = testkey;
 
+    printf("%s\n", sharMem[0].keyName);
+    printf("%s\n", sharMem[0].keyValue);
+    printf("%s\n", sharMem[1].keyName);
+    printf("%s\n", sharMem[1].keyValue); */
 
 
 
@@ -223,7 +224,7 @@ int main(){
             //Check the Input for a Command GET, PUT, DEL
             if (strcmp(arr[0], "GET") == 0)
             {
-                ptr = get(arr[1]);
+                ptr = get(arr[1], sharMem);
                 sendBytes = strlen(ptr);
                 write(cnnct_fd, ptr, sendBytes);
                 write(cnnct_fd, "\n", 2);
@@ -231,7 +232,7 @@ int main(){
             }
             else if (strcmp(arr[0], "PUT") == 0)
             {
-                put(arr[1], arr[2], pos);
+                put(arr[1], arr[2], pos, sharMem);
                 pos += 1;
                 write(cnnct_fd, "\n", 2);
 
@@ -239,7 +240,7 @@ int main(){
             }
             else if (strcmp(arr[0], "DEL") == 0)
             {
-                int i = del(arr[1]);
+                int i = del(arr[1], sharMem);
                 if (i >= 0) {
                     write(cnnct_fd, "key_deleted \n", 11);
                 }
@@ -249,7 +250,7 @@ int main(){
             }
             else if (strcmp(arr[0], "ALL") == 0)
             {
-                //ausgabeKeyValStore();
+                ausgabeKeyValStore(sharMem);
             }
             else
             {

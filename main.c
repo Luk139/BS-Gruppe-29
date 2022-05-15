@@ -19,10 +19,50 @@
 #define PORT_NUMBER 5678
 // Port for running on mac itself
 //#define PORT_NUMBER 4711
+//<<<<<<< Updated upstream
+//=======
+#define LENGTH 100
+#define SIZE 25
+
+
+
+
+// Storing the Index of the keyValueStore
+int pos = 0;
+
+
+//>>>>>>> Stashed changes
 
 int main(){
 
 
+//<<<<<<< Updated upstream
+//=======
+    typedef struct key_ {
+        char* keyName;
+        char* keyValue;
+    }Key;
+
+
+    Key keyValueStore[SIZE];
+
+
+    // id für shared Memory Segment
+    //*sharMem zum verändern von Werten im Shared Memory
+    int id, *sharMem;
+    id = shmget(IPC_PRIVATE, SEGSIZE, IPC_CREAT|0600);
+
+    sharMem = (int *)shmat(id, 0, 0);
+    *sharMem = 0;
+
+
+
+
+
+
+
+
+//>>>>>>> Stashed changes
     //File-Descriptor Rendezvous und Connect
     int rndvz_fd;
     int cnnct_fd;
@@ -120,6 +160,13 @@ int main(){
 
         }
         close(cnnct_fd);
+//<<<<<<< Updated upstream
+//=======
+
+        //shared memory delet
+        //shmdt(sharMem);
+        //shmctl(id, IPC_RMID, 0);
+//>>>>>>> Stashed changes
     }
 
     close(read_bytes);

@@ -55,18 +55,15 @@ int main(){
 
     // id für shared Memory Segment
     //*sharMem zum verändern von Werten im Shared Memory
-    int id, *sharMem;
-    id = shmget(IPC_PRIVATE, SEGSIZE, IPC_CREAT|0600);
+    int id;
+    Key* sharMem = NULL;
+    if((id = shmget(IPC_PRIVATE, SEGSIZE, IPC_CREAT|0600)) < 0){
+        perror("Error while shmget()");
+    }
 
-    sharMem = (int *)shmat(id, 0, 0);
-    *sharMem = 0;
-
-
-
-
-
-
-
+    if ((sharMem = (Key*) shmat(id, 0, 0)) < 0){
+        perror("Error while shmat()");
+    }
 
     //File-Descriptor Rendezvous und Connect
     int rndvz_fd;
@@ -219,12 +216,17 @@ int main(){
                 put(arr[1], arr[2], pos);
                 pos += 1;
                 write(cnnct_fd, "\n", 2);
-                printf("%d\n", pos);
+                printf("positions counter: %d\n", pos);
             }
             else if (strcmp(arr[0], "DEL") == 0)
             {
-                del(arr[2]);
-                write(cnnct_fd, "\n", 2);
+                int i = del(arr[1]);
+                if (i >= 0) {
+                    write(cnnct_fd, "key_deleted \n", 11);
+                }
+                else {
+                    write(cnnct_fd, "key_nonexistent \n", 11);
+                }
             }
             else if (strcmp(arr[0], "ALL") == 0)
             {

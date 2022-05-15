@@ -11,13 +11,25 @@ typedef struct key_ {
     char* keyValue;
 }Key;
 
-Key* keyValueStore[SIZE];
+//Key* keyValueStore[SIZE];
+
+/* //Hilfsfunktion Ausgabe keyValueStore
+void ausgabeKeyValStore(){
+    int j = 0;
+    while(j <= 2){
+        if((keyValueStore[j]->keyName != NULL)) {
+            printf("%s\n", keyValueStore[j]->keyName);
+            printf("%s\t", keyValueStore[j]->keyValue);
+        }
+        j++;
+    }
+} */
 
 int search(char* key){
     // TODO probable error i seems to be responsible for key to get overwritten
     for(int i=0; i < SIZE; i++){
-        if(keyValueStore[i]->keyName != NULL){
-            if(strcmp (key, keyValueStore[i]->keyName) == 0){
+        if((keyValueStore[i]->keyName != NULL) && (keyValueStore[i]->keyName[0] != '\0')){
+            if(strcmp (&key, &keyValueStore[i]->keyName) == 0){
                 return i;
             }
         }
@@ -36,15 +48,18 @@ int put(char* key, char* value, int pos){
     }*/
     //else{
         keyValueStore[pos] = tempKey2;
-        printf("nach dem put: %s \n", keyValueStore[0]->keyValue);
+        printf("keyvalue nach dem put: %s \n", keyValueStore[0]->keyValue);
+
         return 0;
     //}
 }
 
 char* get(char* key){
-    printf("vor dem search in get: %s \n", keyValueStore[0]->keyValue);
+    printf("keyvalue vor dem search in get: %s \n", keyValueStore[0]->keyValue);
+
     int i = search(key);
-    printf("nach dem search in get: %s \n", keyValueStore[0]->keyValue);
+    printf("keyvalue nach dem search in get: %s \n", keyValueStore[0]->keyValue);
+
 
     if(i >= 0){
         //char stringReturn[LENGTH];
@@ -59,23 +74,13 @@ char* get(char* key){
 int del(char* key){
     int i = search(key);
     if(i >= 0){
-        keyValueStore[i]->keyName = NULL;
-        keyValueStore[i]->keyValue = NULL;
+        keyValueStore[i]->keyName[0] = '\0';
+        keyValueStore[i]->keyValue[0] = '\0';
         return 0;
     }
 
     return -1;
 }
 
-//Hilfsfunktion Ausgabe keyValueStore
-void ausgabeKeyValStore(){
-    int j = 0;
-    //keyValueStore[i].keyValue != NULL
-    while(j <= 2){
-        printf("%s\n", keyValueStore[j]->keyName);
-        printf("%s\t", keyValueStore[j]->keyValue);
 
-        j++;
-    }
-}
 

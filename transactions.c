@@ -53,20 +53,19 @@ void initializeSem(){
 
 void semaphoreDown(){
     semop(semaphoreId, &enter, 1);
-
 }
+
 void semaphoreUp(){
     semop(semaphoreId, &leave, 1);
 }
 
 void semaphoreUpAll(){
-    semctl(semaphoreId, 1, SETALL, semop(semaphoreId, &leave, 1));
+    semctl(semaphoreId, SETALL, semop(semaphoreId, &leave, 1));
 }
 
 void closeSemaphore(){
     semctl(semaphoreId, 0, IPC_RMID);
 }
-
 
 bool exclusiveModeEnter(){
 
@@ -79,7 +78,6 @@ bool exclusiveModeEnter(){
     return false;
 
 }
-
 
 bool exclusiveModeLeave(){
 

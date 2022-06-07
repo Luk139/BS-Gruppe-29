@@ -9,8 +9,6 @@
 #include "transactions.h"
 #include "sub.h"
 
-extern bool exclusive;
-
 
 // Initialize structs for Semaphore
 struct sembuf enter = {.sem_num=0, .sem_op=-1, .sem_flg=SEM_UNDO};
@@ -70,7 +68,7 @@ void closeSemaphore(){
 bool exclusiveModeEnter(){
 
     if(!exclusive){
-        semop(semaphoreId, &enter, 1); // Enter critical Zone
+        //semop(semaphoreId, &enter, 1); // Enter critical Zone
         exclusive = true;
         return true;
     }
@@ -82,7 +80,7 @@ bool exclusiveModeEnter(){
 bool exclusiveModeLeave(){
 
     if(exclusive){
-        semop(semaphoreId, &leave, 1); // Enter critical Zone
+        //semop(semaphoreId, &leave, 1); // Enter critical Zone
         exclusive = false;
         return true;
     }

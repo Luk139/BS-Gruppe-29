@@ -9,7 +9,7 @@
 #include "transactions.h"
 #include "sub.h"
 
-extern bool exclusive = false;
+extern bool exclusive;
 
 
 // Initialize structs for Semaphore

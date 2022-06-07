@@ -9,6 +9,7 @@
 typedef struct key_ {
     char keyName[LENGTH];
     char keyValue[LENGTH];
+    bool exclusive;
 }Key;
 
 extern Key *sharMem;

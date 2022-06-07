@@ -57,8 +57,12 @@ void semaphoreDown(){
 }
 void semaphoreUp(){
     semop(semaphoreId, &leave, 1);
-
 }
+
+void semaphoreUpAll(){
+    semctl(semaphoreId, 1, SETALL, semop(semaphoreId, &leave, 1));
+}
+
 void closeSemaphore(){
     semctl(semaphoreId, 0, IPC_RMID);
 }

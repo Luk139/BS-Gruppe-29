@@ -8,6 +8,7 @@ extern bool exclusive;
 bool exclusiveModeEnter();
 bool exclusiveModeLeave();
 void initializeSem();
+void semaphoreUpAll();
 void semaphoreUp();
 void semaphoreDown();
 void closeSemaphore();

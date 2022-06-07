@@ -2,12 +2,9 @@
 // Created by Tobias Mai on 06.06.22.
 //
 
-#include <stdbool.h>
-#include <sys/sem.h>
-#include <sys/shm.h>
-#include <stdio.h>
+
+
 #include "transactions.h"
-#include "sub.h"
 
 
 // Initialize structs for Semaphore
@@ -32,7 +29,7 @@ void initializeSem(){
 
 
 
-/*  id = Identifier for the semaphoregrp
+/*  sharMemId = Identifier for the semaphoregrp
  *  nsem = Counter of the semaphore in the grp
  *  cmd = SETALL set values of the semaphore
  *  arg = Options for setall need to be of type array to set the values
@@ -55,10 +52,6 @@ void semaphoreDown(){
 
 void semaphoreUp(){
     semop(semaphoreId, &leave, 1);
-}
-
-void semaphoreUpAll(){
-    semctl(semaphoreId, SETALL, semop(semaphoreId, &leave, 1));
 }
 
 void closeSemaphore(){

@@ -5,7 +5,8 @@
 
 extern bool exclusive;
 
-bool exclusiveMode();
+bool exclusiveModeEnter();
+bool exclusiveModeLeave();
 void initializeSem();
 void semaphoreUp();
 void semaphoreDown();

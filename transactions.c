@@ -61,19 +61,26 @@ void semaphoreUp(){
 }
 void closeSemaphore(){
     semctl(semaphoreId, 0, IPC_RMID);
-
 }
 
 
-bool exclusiveMode(){
+bool exclusiveModeEnter(){
 
     if(!exclusive){
         semop(semaphoreId, &enter, 1); // Enter critical Zone
         exclusive = true;
         return true;
     }
-    else{
-        semop(semaphoreId, &leave, 1); // Leave critical Zone
+
+    return false;
+
+}
+
+
+bool exclusiveModeLeave(){
+
+    if(exclusive){
+        semop(semaphoreId, &leave, 1); // Enter critical Zone
         exclusive = false;
         return true;
     }

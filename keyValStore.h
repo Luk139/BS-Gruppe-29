@@ -14,10 +14,11 @@ typedef struct key_ {
     int subscribers[LENGTH];
 }Key;
 
+
 #include "main.h"
+#include "pubSub.h"
 #include <stdio.h>
 #include <string.h>
-
 
 int search(char* key, Key *ptrkeyval);
 int put(char* key, char* value, Key *ptrkeyval);

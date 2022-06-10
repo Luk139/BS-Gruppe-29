@@ -21,14 +21,10 @@ int clientHandler(int cnnct_fd) {
             perror("Error while read()");
             return EXIT_FAILURE;
         }
-        // Skip loop when client isn't stopped properly
-        if(read_bytes == 0){
-            exit(0);
-        }
-
-        //Quit
-        if (strncmp("QUIT", userInput, 4) == 0) {
+        // Skip loop when client isn't stopped properly prevent sending 0 bytes|| Quit
+        if (read_bytes == 0 || strncmp("QUIT", userInput, 4) == 0) {
             printf("Server Exit...\n");
+            deleteSubscribers();
             exit(0);
         }
 
@@ -67,6 +63,20 @@ void parentLoop(int rndvz_fd){
 
         // return value of fork is 0 if child process, parent process has the value > 0 (process ID of newly created child)
         if(fork() == 0){
+
+            // Subscriber Process
+            if (fork() == 0) {
+                //Kills the child if parent dies
+                prctl(PR_SET_PDEATHSIG, SIGTERM);
+                Notification notification;
+                while (1) {
+                    // Waits for pid from another client and sends message if there is one in the queue
+                    msgrcv(messageQueueID, &notification, sizeof(Notification), getppid(), 0);
+                    write(cnnct_fd, notification.msg, strlen(notification.msg));
+                }
+                exit(0);
+            }
+
             clientHandler(cnnct_fd);
             //For terminating the child
             exit(0);

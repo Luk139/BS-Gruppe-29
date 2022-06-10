@@ -10,6 +10,7 @@
 #include <string.h>
 #include <unistd.h>
 #include "transactions.h"
+#include "pubSub.h"
 #include "keyValStore.h"
 
 

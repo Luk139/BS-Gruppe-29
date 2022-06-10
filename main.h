@@ -24,6 +24,7 @@ void initIPC();
 void freeIPC();
 
 extern Key *sharMem;
+extern int messageQueueID;
 
 
 #endif //BS_GRUPPE_29_MAIN_H

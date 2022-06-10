@@ -22,7 +22,7 @@ void input(char * userInput, int cnnct_fd){
     // /x20 delimiter is a space
     char delimiter[] = "\x20";
 
-    //Array for storing the prts of the string [0] will store the command, [1] for the key and [2] for the value
+    //Array for storing the prts of the string [0] will store the value, [1] for the key and [2] for the value
     char arr[SIZE][LENGTH];
     int i = 0;
     int sendBytes = 0;
@@ -38,7 +38,7 @@ void input(char * userInput, int cnnct_fd){
         strcpy(arr[i], ptr);
         write(cnnct_fd, ptr, sendBytes);
         //add : to the message to the client
-        // if put command skip last :
+        // if put value skip last :
         if (i <= 1) {
             write(cnnct_fd, ":", 1);
         }
@@ -52,14 +52,14 @@ void input(char * userInput, int cnnct_fd){
         i++;
     }
 
-    char *wrongInput = "Please use a proper command.\n";
+    char *wrongInput = "Please use a proper value.\n";
     int wrngInptLength = strlen(wrongInput);
 
 
 
 
 
-    char *command;
+    char *value;
     //Check the Input for a Command GET, PUT, DEL
 
 
@@ -77,9 +77,8 @@ void input(char * userInput, int cnnct_fd){
 
     else if (strcasecmp(arr[0], "GET") == 0) {
         //printf("%d", sharMem->exclusive);
-        command = get(arr[1], sharMem);
-        sendBytes = strlen(command);
-        write(cnnct_fd, command, sendBytes);
+        value = get(arr[1], sharMem);
+        write(cnnct_fd, value, strlen(value));
         write(cnnct_fd, "\n", 2);
     }
 
@@ -99,7 +98,10 @@ void input(char * userInput, int cnnct_fd){
     }
 
     else if (strcasecmp(arr[0], "SUB") == 0) {
-
+        subscribe(arr[1]);
+        value = get(arr[1], sharMem);
+        write(cnnct_fd, value, strlen(value));
+        write(cnnct_fd, "\n", 2);
     }
 
     else if (strcasecmp(arr[0], "ALL") == 0) {
